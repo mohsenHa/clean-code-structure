@@ -1,0 +1,17 @@
+---
+type: yml
+
+application:
+  graceful_shutdown_timeout_in_seconds: 10
+  profiling_port: 1234
+  enable_profiling: true
+
+http_server:
+  port: 8088
+
+logger:
+  file_name: ./logs/log.json
+  local_time: false
+  max_size: 10
+  max_backups: 10
+  max_age: 30
