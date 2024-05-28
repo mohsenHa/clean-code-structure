@@ -1,8 +1,6 @@
 package logger
 
 import (
-	"clean-code-structure/config"
-	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -22,10 +20,8 @@ type Config struct {
 	MaxAge     int    `json:"max_age"`
 }
 
-func init() {
+func Start(cfg Config) {
 	once.Do(func() {
-		cfg := config.Load("config.yml")
-		fmt.Printf("cfg: %+v\n", cfg)
 
 		Logger, _ = zap.NewProduction()
 
@@ -34,11 +30,11 @@ func init() {
 		defaultEncoder := zapcore.NewJSONEncoder(PEConfig)
 
 		writer := zapcore.AddSync(&lumberjack.Logger{
-			Filename:   cfg.Logger.Filename,
-			LocalTime:  cfg.Logger.LocalTime,
-			MaxSize:    cfg.Logger.MaxSize,
-			MaxBackups: cfg.Logger.MaxBackups,
-			MaxAge:     cfg.Logger.MaxAge,
+			Filename:   cfg.Filename,
+			LocalTime:  cfg.LocalTime,
+			MaxSize:    cfg.MaxSize,
+			MaxBackups: cfg.MaxBackups,
+			MaxAge:     cfg.MaxAge,
 		})
 
 		stdOutWriter := zapcore.AddSync(os.Stdout)
