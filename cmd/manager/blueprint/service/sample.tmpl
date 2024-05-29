@@ -1,0 +1,9 @@
+package {{.}}service
+
+import (
+	"clean-code-structure/param/{{.}}param"
+)
+
+func (s Service) Sample(req {{.}}param.SampleRequest) ({{.}}param.SampleResponse, error) {
+	return {{.}}param.SampleResponse{Message: "everything is good!"}, nil
+}
