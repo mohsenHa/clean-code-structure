@@ -86,7 +86,7 @@ func profiling(cfg config.Config, wg *sync.WaitGroup, done <-chan bool) {
 		}
 	}()
 }
-func setupServices(cfg config.Config, wg *sync.WaitGroup, done chan bool) (requiredServices httpserver.RequiredServices) {
+func setupServices(_ config.Config, _ *sync.WaitGroup, _ chan bool) (requiredServices httpserver.RequiredServices) {
 
 	healthValidator := healthvalidator.New()
 
