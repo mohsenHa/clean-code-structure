@@ -26,9 +26,9 @@ func main() {
 
 	logger.Start(cfg.Logger)
 
-	rSvcs, rVal := setupServices(cfg, wg, done)
+	rSvcs := setupServices(cfg, wg, done)
 
-	server := httpserver.New(cfg, rSvcs, rVal)
+	server := httpserver.New(cfg, rSvcs)
 	go func() {
 		server.Serve()
 	}()
@@ -86,11 +86,11 @@ func profiling(cfg config.Config, wg *sync.WaitGroup, done <-chan bool) {
 		}
 	}()
 }
-func setupServices(cfg config.Config, wg *sync.WaitGroup, done chan bool) (requiredServices httpserver.RequiredServices, requiredValidators httpserver.RequiredValidators) {
+func setupServices(cfg config.Config, wg *sync.WaitGroup, done chan bool) (requiredServices httpserver.RequiredServices) {
 
-	requiredValidators.HealthValidator = healthvalidator.New()
+	healthValidator := healthvalidator.New()
 
-	requiredServices.HealthService = healthservice.New()
+	requiredServices.HealthService = healthservice.New(healthValidator)
 
 	return
 }

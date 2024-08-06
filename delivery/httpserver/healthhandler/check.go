@@ -3,6 +3,8 @@ package healthhandler
 import (
 	"clean-code-structure/param/healthparam"
 	"clean-code-structure/pkg/httpmsg"
+	"clean-code-structure/validator"
+	"errors"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -12,15 +14,18 @@ func (h Handler) healthCheck(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
-	if fieldErrors, err := h.healthValidator.ValidateCheckRequest(req); err != nil {
+
+	resp, err := h.healthService.Check(req)
+	var vErr validator.Error
+
+	if errors.As(err, &vErr) {
 		msg, code := httpmsg.Error(err)
 		return c.JSON(code, echo.Map{
 			"message": msg,
-			"errors":  fieldErrors,
+			"errors":  vErr.Fields,
 		})
 	}
 
-	resp, err := h.healthService.Check(req)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

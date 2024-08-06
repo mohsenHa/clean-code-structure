@@ -5,7 +5,6 @@ import (
 	"clean-code-structure/delivery/httpserver/healthhandler"
 	"clean-code-structure/logger"
 	"clean-code-structure/service/healthservice"
-	"clean-code-structure/validator/healthvalidator"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,15 +21,11 @@ type RequiredServices struct {
 	HealthService healthservice.Service
 }
 
-type RequiredValidators struct {
-	HealthValidator healthvalidator.Validator
-}
-
-func New(config config.Config, services RequiredServices, validators RequiredValidators) Server {
+func New(config config.Config, services RequiredServices) Server {
 	return Server{
 		Router:             echo.New(),
 		config:             config,
-		healthcheckHandler: healthhandler.New(services.HealthService, validators.HealthValidator),
+		healthcheckHandler: healthhandler.New(services.HealthService),
 	}
 }
 

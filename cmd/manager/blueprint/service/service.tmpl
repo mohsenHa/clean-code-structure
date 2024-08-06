@@ -1,8 +1,13 @@
 package {{.}}service
 
+import "clean-code-structure/validator/{{.}}validator"
+
 type Service struct {
+    validator {{.}}validator.Validator
 }
 
-func New() Service {
-	return Service{}
+func New(validator {{.}}validator.Validator) Service {
+	return Service{
+	    validator: validator,
+	}
 }

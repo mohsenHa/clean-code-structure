@@ -5,5 +5,8 @@ import (
 )
 
 func (s Service) Sample(req {{.}}param.SampleRequest) ({{.}}param.SampleResponse, error) {
+    if err := s.validator.ValidateSampleRequest(req); err != nil {
+		return {{.}}param.SampleResponse{}, err
+	}
 	return {{.}}param.SampleResponse{Message: "everything is good!"}, nil
 }

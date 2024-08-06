@@ -2,11 +2,13 @@ package {{.}}validator
 
 import (
 	"clean-code-structure/param/{{.}}param"
+	"clean-code-structure/pkg/errmsg"
 	"clean-code-structure/pkg/richerror"
+	"clean-code-structure/validator"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-func (v Validator) ValidateSampleRequest(req {{.}}param.SampleRequest) (map[string]string, error) {
+func (v Validator) ValidateSampleRequest(req {{.}}param.SampleRequest) error {
 	const op = "messagevalidator.ValidateSampleRequest"
 
 	if err := validation.ValidateStruct(&req); err != nil {
@@ -21,9 +23,13 @@ func (v Validator) ValidateSampleRequest(req {{.}}param.SampleRequest) (map[stri
 			}
 		}
 
-		return fieldErrors, richerror.New(op).WithKind(richerror.KindInvalid).
-			WithMeta(map[string]interface{}{"req": req}).WithErr(err)
+		return validator.Error{
+        	Fields: fieldErrors,
+        	Err: richerror.New(op).WithMessage(errmsg.ErrorMsgInvalidInput).
+        		WithKind(richerror.KindInvalid).
+        		WithMeta(map[string]interface{}{"req": req}).WithErr(err),
+        }
 	}
 
-	return nil, nil
+	return nil
 }
