@@ -16,8 +16,8 @@ func handler() {
 	newHandler(name)
 
 	fmt.Println("Successfully")
-
 }
+
 func newHandler(name string) {
 	targetPath := filepath.Join("delivery", "httpserver", name+"handler")
 	files := []file{
@@ -46,9 +46,9 @@ func newHandler(name string) {
 		if err != nil {
 			fmt.Println()
 			fmt.Println(err)
+
 			continue
 		}
 		fmt.Println(" Done")
 	}
-
 }

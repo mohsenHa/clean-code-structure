@@ -4,27 +4,26 @@ import (
 	"clean-code-structure/logger"
 	"clean-code-structure/pkg/errmsg"
 	"clean-code-structure/pkg/richerror"
+	"errors"
 	"net/http"
 )
 
 func Error(err error) (message string, code int) {
-	switch err.(type) {
-	case richerror.RichError:
-		re := err.(richerror.RichError)
+	re := richerror.RichError{}
+	if errors.As(err, &re) {
 		msg := re.Message()
-
-		code := mapKindToHTTPStatusCode(re.Kind())
+		code = mapKindToHTTPStatusCode(re.Kind())
 
 		// we should not expose unexpected error messages
-		if code >= 500 {
+		if code >= http.StatusInternalServerError {
 			logger.Logger.Error(msg)
 			msg = errmsg.ErrorMsgSomethingWentWrong
 		}
 
 		return msg, code
-	default:
-		return err.Error(), http.StatusBadRequest
 	}
+
+	return err.Error(), http.StatusBadRequest
 }
 
 func mapKindToHTTPStatusCode(kind richerror.Kind) int {

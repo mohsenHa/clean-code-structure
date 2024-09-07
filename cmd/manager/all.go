@@ -18,5 +18,4 @@ func newAll() {
 	newService(name)
 
 	fmt.Println("Successfully")
-
 }

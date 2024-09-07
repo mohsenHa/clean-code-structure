@@ -2,9 +2,10 @@ package scheduler
 
 import (
 	"fmt"
-	"github.com/go-co-op/gocron"
 	"sync"
 	"time"
+
+	"github.com/go-co-op/gocron"
 )
 
 type Config struct {
@@ -19,7 +20,8 @@ type Scheduler struct {
 func New(config Config) Scheduler {
 	return Scheduler{
 		config: config,
-		sch:    gocron.NewScheduler(time.UTC)}
+		sch:    gocron.NewScheduler(time.UTC),
+	}
 }
 
 func (s Scheduler) Start(done <-chan bool, wg *sync.WaitGroup) {

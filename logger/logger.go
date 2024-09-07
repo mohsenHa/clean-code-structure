@@ -1,11 +1,13 @@
 package logger
 
 import (
+	"log"
+	"os"
+	"sync"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"sync"
 )
 
 var Logger *zap.Logger
@@ -22,8 +24,12 @@ type Config struct {
 
 func Start(cfg Config) {
 	once.Do(func() {
+		lg, err := zap.NewProduction()
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		Logger, _ = zap.NewProduction()
+		Logger = lg
 
 		PEConfig := zap.NewProductionEncoderConfig()
 		PEConfig.EncodeTime = zapcore.ISO8601TimeEncoder

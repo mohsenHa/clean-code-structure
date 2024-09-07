@@ -65,8 +65,8 @@ func main() {
 			fmt.Printf("%d. %s\n", i, c.description)
 		}
 		scanner.Scan()
-		commandId := scanner.Text()
-		atoi, err := strconv.Atoi(commandId)
+		commandID := scanner.Text()
+		atoi, err := strconv.Atoi(commandID)
 		if err != nil {
 			fmt.Println(err)
 
@@ -75,9 +75,9 @@ func main() {
 		c, ok := commands[atoi]
 		if !ok {
 			fmt.Println("Unknown command!")
+
 			continue
 		}
 		c.function()
 	}
-
 }

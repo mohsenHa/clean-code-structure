@@ -9,6 +9,7 @@ type Application struct {
 	GracefulShutdownTimeoutInSecond int  `koanf:"graceful_shutdown_timeout_in_seconds"`
 	EnableProfiling                 bool `koanf:"enable_profiling"`
 	ProfilingPort                   int  `koanf:"profiling_port"`
+	ReadHeaderTimeout               int  `koanf:"read_header_timeout"`
 }
 
 type HTTPServer struct {

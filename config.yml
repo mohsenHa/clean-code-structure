@@ -5,6 +5,7 @@ application:
   graceful_shutdown_timeout_in_seconds: 10
   profiling_port: 1234
   enable_profiling: true
+  read_header_timeout: 30
 
 http_server:
   port: 8088

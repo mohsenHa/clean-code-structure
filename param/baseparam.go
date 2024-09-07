@@ -10,5 +10,4 @@ type BaseRequest struct {
 	Request  *http.Request
 	Response *http.Response
 }
-type BaseResponse struct {
-}
+type BaseResponse struct{}

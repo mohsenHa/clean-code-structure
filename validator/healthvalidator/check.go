@@ -5,6 +5,8 @@ import (
 	"clean-code-structure/pkg/errmsg"
 	"clean-code-structure/pkg/richerror"
 	"clean-code-structure/validator"
+	"errors"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -13,9 +15,8 @@ func (v Validator) ValidateCheckRequest(req healthparam.CheckRequest) error {
 
 	if err := validation.ValidateStruct(&req); err != nil {
 		fieldErrors := make(map[string]string)
-
-		errV, ok := err.(validation.Errors)
-		if ok {
+		errV := validation.Errors{}
+		if errors.As(err, &errV) {
 			for key, value := range errV {
 				if value != nil {
 					fieldErrors[key] = value.Error()

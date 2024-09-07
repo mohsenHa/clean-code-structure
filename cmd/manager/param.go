@@ -16,7 +16,6 @@ func param() {
 	newParam(name)
 
 	fmt.Println("Successfully")
-
 }
 
 func newParam(name string) {
@@ -35,9 +34,9 @@ func newParam(name string) {
 		if err != nil {
 			fmt.Println()
 			fmt.Println(err)
+
 			continue
 		}
 		fmt.Println(" Done")
 	}
-
 }

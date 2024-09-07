@@ -4,6 +4,7 @@ import (
 	"clean-code-structure/config"
 	"clean-code-structure/scheduler"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"sync"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	cfg := config.Load("config.yml")
+	cfg, err := config.Load("config.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Printf("cfg: %+v\n", cfg)
 
 	done := make(chan bool)

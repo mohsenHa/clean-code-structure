@@ -16,7 +16,6 @@ func service() {
 	newService(name)
 
 	fmt.Println("Successfully")
-
 }
 
 func newService(name string) {
@@ -41,9 +40,9 @@ func newService(name string) {
 		if err != nil {
 			fmt.Println()
 			fmt.Println(err)
+
 			continue
 		}
 		fmt.Println(" Done")
 	}
-
 }

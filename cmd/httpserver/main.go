@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"sync"
@@ -21,7 +20,10 @@ func main() {
 	wg := &sync.WaitGroup{}
 	done := make(chan bool)
 
-	cfg := config.Load("config.yml")
+	cfg, err := config.Load("config.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Printf("cfg: %+v\n", cfg)
 
 	logger.Start(cfg.Logger)
@@ -62,7 +64,10 @@ func main() {
 
 func profiling(cfg config.Config, wg *sync.WaitGroup, done <-chan bool) {
 	fmt.Printf("Profiling enabled on port %d", cfg.Application.ProfilingPort)
-	srv := &http.Server{Addr: fmt.Sprintf(":%d", cfg.Application.ProfilingPort)}
+	srv := &http.Server{
+		Addr:              fmt.Sprintf(":%d", cfg.Application.ProfilingPort),
+		ReadHeaderTimeout: time.Duration(cfg.Application.ReadHeaderTimeout) * time.Second,
+	}
 	wg.Add(1)
 
 	go func() {
@@ -74,23 +79,19 @@ func profiling(cfg config.Config, wg *sync.WaitGroup, done <-chan bool) {
 	}()
 
 	go func() {
-		for {
-			select {
-			case <-done:
-				ctx, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
-				defer cancel()
-				if err := srv.Shutdown(ctx); err != nil {
-					panic(err)
-				}
-			}
+		<-done
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.Application.GracefulShutdownTimeoutInSecond))
+		defer cancel()
+		if err := srv.Shutdown(ctx); err != nil {
+			panic(err)
 		}
 	}()
 }
-func setupServices(_ config.Config, _ *sync.WaitGroup, _ chan bool) (requiredServices httpserver.RequiredServices) {
 
+func setupServices(_ config.Config, _ *sync.WaitGroup, _ chan bool) (requiredServices httpserver.RequiredServices) {
 	healthValidator := healthvalidator.New()
 
 	requiredServices.HealthService = healthservice.New(healthValidator)
 
-	return
+	return requiredServices
 }

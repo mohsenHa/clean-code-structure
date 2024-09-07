@@ -16,7 +16,6 @@ func validator() {
 	newValidator(name)
 
 	fmt.Println("Successfully")
-
 }
 
 func newValidator(name string) {
@@ -41,9 +40,9 @@ func newValidator(name string) {
 		if err != nil {
 			fmt.Println()
 			fmt.Println(err)
+
 			continue
 		}
 		fmt.Println(" Done")
 	}
-
 }

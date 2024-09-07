@@ -6,6 +6,7 @@ import (
 	"clean-code-structure/logger"
 	"clean-code-structure/service/healthservice"
 	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
@@ -21,10 +22,10 @@ type RequiredServices struct {
 	HealthService healthservice.Service
 }
 
-func New(config config.Config, services RequiredServices) Server {
+func New(cfg config.Config, services RequiredServices) Server {
 	return Server{
 		Router:             echo.New(),
-		config:             config,
+		config:             cfg,
 		healthcheckHandler: healthhandler.New(services.HealthService),
 	}
 }
