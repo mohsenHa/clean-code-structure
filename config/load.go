@@ -28,9 +28,9 @@ func Load(configPath string) (Config, error) {
 		return Config{}, err
 	}
 
-	err = k.Load(env.Provider("MESSENGER_", ".", func(s string) string {
+	err = k.Load(env.Provider("APPLICATION_", ".", func(s string) string {
 		str := strings.ReplaceAll(strings.ToLower(
-			strings.TrimPrefix(s, "MESSENGER_")), "_", ".")
+			strings.TrimPrefix(s, "APPLICATION_")), "_", ".")
 
 		return strings.ReplaceAll(str, "..", "_")
 	}), nil)

@@ -39,9 +39,9 @@ func main() {
 		profiling(cfg, wg, done)
 	}
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, os.Interrupt)
+	<-exit
 	fmt.Println("Quit signal received")
 	close(done)
 
