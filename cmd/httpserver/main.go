@@ -1,11 +1,6 @@
 package main
 
 import (
-	"clean-code-structure/config"
-	"clean-code-structure/delivery/httpserver"
-	"clean-code-structure/logger"
-	"clean-code-structure/service/healthservice"
-	"clean-code-structure/validator/healthvalidator"
 	"context"
 	"fmt"
 	"log"
@@ -14,6 +9,12 @@ import (
 	"os/signal"
 	"sync"
 	"time"
+
+	"clean-code-structure/config"
+	"clean-code-structure/delivery/httpserver"
+	"clean-code-structure/logger"
+	"clean-code-structure/service/healthservice"
+	"clean-code-structure/validator/healthvalidator"
 )
 
 func main() {

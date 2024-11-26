@@ -1,15 +1,16 @@
 package httpserver
 
 import (
-	"clean-code-structure/config"
-	"clean-code-structure/delivery/httpserver/healthhandler"
-	"clean-code-structure/logger"
-	"clean-code-structure/service/healthservice"
 	"fmt"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
+
+	"clean-code-structure/config"
+	"clean-code-structure/delivery/httpserver/healthhandler"
+	"clean-code-structure/logger"
+	"clean-code-structure/service/healthservice"
 )
 
 type Server struct {
@@ -47,7 +48,7 @@ func (s Server) Serve() {
 		LogLatency:       true,
 		LogError:         true,
 		LogProtocol:      true,
-		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+		LogValuesFunc: func(_ echo.Context, v middleware.RequestLoggerValues) error {
 			errMsg := ""
 			if v.Error != nil {
 				errMsg = v.Error.Error()

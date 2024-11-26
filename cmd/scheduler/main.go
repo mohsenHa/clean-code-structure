@@ -1,14 +1,15 @@
 package main
 
 import (
-	"clean-code-structure/config"
-	"clean-code-structure/scheduler"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"time"
+
+	"clean-code-structure/config"
+	"clean-code-structure/scheduler"
 )
 
 func main() {

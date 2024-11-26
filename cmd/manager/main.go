@@ -1,9 +1,10 @@
 package main
 
 import (
-	_ "github.com/mohsenHa/cleancode-cli-manager"
 	"os"
 	"os/signal"
+
+	_ "github.com/mohsenHa/cleancode-cli-manager"
 )
 
 func main() {

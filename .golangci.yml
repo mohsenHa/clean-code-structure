@@ -2,7 +2,7 @@
 
 run:
   # Depends on your hardware
-  concurrency: 1
+  concurrency: 10
 
   timeout: 30m
 
@@ -11,16 +11,6 @@ run:
 
   # Check for bugs in tests.
   tests: false
-
-  skip-dirs:
-    - (^|/)vendor($|/)
-    - "cmd/destination/example/*"
-
-  skip-files:
-    - .*_test.go
-
-  # When enabled linter will skip directories: vendor$, third_party$, testdata$, examples$, Godeps$, builtin$
-  skip-dirs-use-default: false
 
   # With the read-only mode linter will fail if the go.mod file is outdated.
   modules-download-mode: readonly
@@ -68,7 +58,7 @@ linters:
     - errorlint
 
     # Checks for pointers to enclosing loop variables.
-    - exportloopref
+    - copyloopvar
 
     # Finds forced type assertions.
     - forcetypeassert
@@ -90,7 +80,7 @@ linters:
     - goimports
 
     # Reports magic consts. Might be noisy but still good.
-    - gomnd
+    - mnd
 
     # Allow or ban replace directives in go.mod
     # or force explanation for retract directives.
@@ -118,7 +108,7 @@ linters:
     # Even with deprecation notice I find it useful.
     # There are situations when instead of io.ReaderCloser
     # I can use io.Reader. A small but good improvement.
-    - interfacer
+#    - interfacer
 
     # Some log checkers, might be useful.
     - loggercheck
@@ -206,7 +196,7 @@ linters:
     - cyclop
 
     # Deprecated, replaced by `unused`.
-    - deadcode
+#    - deadcode
 
     # Check declaration order of types, consts, vars and funcs.
     - decorder
@@ -231,7 +221,7 @@ linters:
 
     # Forces to handle more cases. Cool but noisy.
     - exhaustive
-    - exhaustivestruct # Deprecated, replaced by check below.
+#    - exhaustivestruct # Deprecated, replaced by check below.
     - exhaustruct
 
     # Forbids some identifiers. I don't have a case for it.
@@ -253,19 +243,19 @@ linters:
     - godox
 
     # Check the error handling expressions. Too noisy.
-    - goerr113
+    - err113
 
     # I don't use file headers.
     - goheader
 
     # 1st Go linter, deprecated :( use `revive`.
-    - golint
+#    - golint
 
     # Printf-like functions must have -f.
     - goprintffuncname
 
     # Deprecated
-    - ifshort
+#    - ifshort
 
     # Checks imports aliases, rare.
     - importas
@@ -286,7 +276,7 @@ linters:
     - makezero
 
     # Deprecated. Use govet `fieldalignment`.
-    - maligned
+#    - maligned
 
     # Deeply nested if statements, subjective.
     - nestif
@@ -295,7 +285,7 @@ linters:
     - nonamedreturns
 
     # Deprecated. Replaced by `revive`.
-    - nosnakecase
+#    - nosnakecase
 
     # Finds misuse of Sprintf with host:port in a URL. Cool but rare.
     - nosprintfhostport
@@ -304,10 +294,10 @@ linters:
     - paralleltest
 
     # Deprecated
-    - scopelint
+#    - scopelint
 
     # Deprecated
-    - structcheck
+#    - structcheck
 
     # Often non-`_test` package is ok.
     - testpackage
@@ -316,7 +306,7 @@ linters:
     - typecheck
 
     # Deprecated
-    - varcheck
+#    - varcheck
 
     # I'm fine with long variable names with a small scope.
     - varnamelen
@@ -347,7 +337,15 @@ linters-settings:
       - hugeParam
       - rangeExprCopy
       - rangeValCopy
-
+  gofumpt:
+    module-path: clean-code-structure
+  goimports:
+    local-prefixes: clean-code-structure
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix(clean-code-structure) # Replace with your module name
   errcheck:
     # Report `a := b.(MyStruct)` when `a, ok := ...` should be.
     check-type-assertions: true # Default: false
@@ -382,7 +380,8 @@ linters-settings:
 # See also https://gist.github.com/cristaloleg/dc29ca0ef2fb554de28d94c3c6f6dc88
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
 
   # I do not find this useful, parameter above already enables filepath
   # with a line and column.
@@ -401,6 +400,14 @@ output:
   sort-results: true
 
 issues:
+  exclude-files:
+    - .*_test.go
+  exclude-dirs:
+    - (^|/)vendor($|/)
+    - (^|/)example($|/)
+
+  exclude-dirs-use-default: false
+
   # Found it strange to skip the errors, setting 0 to have all the results.
   max-issues-per-linter: 0
 

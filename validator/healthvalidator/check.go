@@ -1,21 +1,25 @@
 package healthvalidator
 
 import (
+	"errors"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+
 	"clean-code-structure/param/healthparam"
 	"clean-code-structure/pkg/errmsg"
 	"clean-code-structure/pkg/richerror"
 	"clean-code-structure/validator"
-	"errors"
-
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
+// Validator layer MUST return validator.Error
+
 func (v Validator) ValidateCheckRequest(req healthparam.CheckRequest) error {
-	const op = "messagevalidator.ValidateSendRequest"
+	const op = "messagevalidator.ValidateCheckRequest"
 
 	if err := validation.ValidateStruct(&req); err != nil {
 		fieldErrors := make(map[string]string)
-		errV := validation.Errors{}
+
+		var errV validation.Errors
 		if errors.As(err, &errV) {
 			for key, value := range errV {
 				if value != nil {

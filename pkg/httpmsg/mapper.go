@@ -1,11 +1,12 @@
 package httpmsg
 
 import (
+	"errors"
+	"net/http"
+
 	"clean-code-structure/logger"
 	"clean-code-structure/pkg/errmsg"
 	"clean-code-structure/pkg/richerror"
-	"errors"
-	"net/http"
 )
 
 func Error(err error) (message string, code int) {

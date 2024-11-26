@@ -11,7 +11,7 @@ require (
 	github.com/knadh/koanf/providers/file v0.1.0
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/labstack/echo/v4 v4.12.0
-	github.com/mohsenHa/cleancode-cli-manager v0.0.0-20240930120341-4849ee4a93f0
+	github.com/mohsenHa/cleancode-cli-manager v0.0.0-20241126064731-c423e17f7515
 	go.uber.org/zap v1.27.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
