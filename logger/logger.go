@@ -15,11 +15,12 @@ var Logger *zap.Logger
 var once = sync.Once{}
 
 type Config struct {
-	Filename   string `json:"filename"`
-	LocalTime  bool   `json:"local_time"`
-	MaxSize    int    `json:"max_size"`
-	MaxBackups int    `json:"max_backups"`
-	MaxAge     int    `json:"max_age"`
+	Filename       string `json:"filename"`
+	LocalTime      bool   `json:"local_time"`
+	MaxSize        int    `json:"max_size"`
+	MaxBackups     int    `json:"max_backups"`
+	MaxAge         int    `json:"max_age"`
+	StdoutLogLevel string `koanf:"stdout_log_level"`
 }
 
 func Start(cfg Config) {
@@ -45,9 +46,22 @@ func Start(cfg Config) {
 
 		stdOutWriter := zapcore.AddSync(os.Stdout)
 		defaultLogLevel := zapcore.InfoLevel
+		stdOutLogLevel := defaultLogLevel
+		switch cfg.StdoutLogLevel {
+		case "debug":
+			stdOutLogLevel = zapcore.DebugLevel
+		case "error":
+			stdOutLogLevel = zapcore.ErrorLevel
+		case "info":
+			stdOutLogLevel = zapcore.InfoLevel
+		case "fatal":
+			stdOutLogLevel = zapcore.FatalLevel
+		case "warning":
+			stdOutLogLevel = zapcore.WarnLevel
+		}
 		core := zapcore.NewTee(
 			zapcore.NewCore(defaultEncoder, writer, defaultLogLevel),
-			zapcore.NewCore(defaultEncoder, stdOutWriter, zap.InfoLevel),
+			zapcore.NewCore(defaultEncoder, stdOutWriter, stdOutLogLevel),
 		)
 		Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	})
