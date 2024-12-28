@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"sync"
 
@@ -15,27 +15,24 @@ var Logger *zap.Logger
 var once = sync.Once{}
 
 type Config struct {
-	Filename       string `json:"filename"`
-	LocalTime      bool   `json:"local_time"`
-	MaxSize        int    `json:"max_size"`
-	MaxBackups     int    `json:"max_backups"`
-	MaxAge         int    `json:"max_age"`
+	Filename       string `koanf:"filename"`
+	LocalTime      bool   `koanf:"local_time"`
+	MaxSize        int    `koanf:"max_size"`
+	MaxBackups     int    `koanf:"max_backups"`
+	MaxAge         int    `koanf:"max_age"`
 	StdoutLogLevel string `koanf:"stdout_log_level"`
+	WriterLogLevel string `koanf:"writer_log_level"`
 }
 
 func Start(cfg Config) {
 	once.Do(func() {
-		lg, err := zap.NewProduction()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		Logger = lg
+		Logger = zap.Must(zap.NewProduction())
 
 		PEConfig := zap.NewProductionEncoderConfig()
 		PEConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 		defaultEncoder := zapcore.NewJSONEncoder(PEConfig)
 
+		fmt.Printf("%+v\n", cfg)
 		writer := zapcore.AddSync(&lumberjack.Logger{
 			Filename:   cfg.Filename,
 			LocalTime:  cfg.LocalTime,
@@ -45,8 +42,10 @@ func Start(cfg Config) {
 		})
 
 		stdOutWriter := zapcore.AddSync(os.Stdout)
-		defaultLogLevel := zapcore.InfoLevel
-		stdOutLogLevel := defaultLogLevel
+
+		writerLogLevel := zapcore.InfoLevel
+		stdOutLogLevel := writerLogLevel
+
 		switch cfg.StdoutLogLevel {
 		case "debug":
 			stdOutLogLevel = zapcore.DebugLevel
@@ -59,9 +58,23 @@ func Start(cfg Config) {
 		case "warning":
 			stdOutLogLevel = zapcore.WarnLevel
 		}
+
+		switch cfg.WriterLogLevel {
+		case "debug":
+			writerLogLevel = zapcore.DebugLevel
+		case "error":
+			writerLogLevel = zapcore.ErrorLevel
+		case "info":
+			writerLogLevel = zapcore.InfoLevel
+		case "fatal":
+			writerLogLevel = zapcore.FatalLevel
+		case "warning":
+			writerLogLevel = zapcore.WarnLevel
+		}
+
 		core := zapcore.NewTee(
-			zapcore.NewCore(defaultEncoder, writer, defaultLogLevel),
 			zapcore.NewCore(defaultEncoder, stdOutWriter, stdOutLogLevel),
+			zapcore.NewCore(defaultEncoder, writer, writerLogLevel),
 		)
 		Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	})
